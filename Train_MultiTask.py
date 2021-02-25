@@ -37,15 +37,20 @@ logger.addHandler(ch)
 #
 ######################################################
 datasets = {
-    'unidep_pos':
-        {'columns': {1:'tokens', 3:'POS'},
-         'label': 'POS',
+    'ampersand':
+        {'columns': {1:'tokens', 2:'full_BIO'},
+         'label': 'full_BIO',
+         'evaluate': False,
+         'commentSymbol': None},
+    'ampersand1':
+        {'columns': {1:'tokens', 3:'bt_BIO'},
+         'label': 'bt_BIO',
          'evaluate': True,
          'commentSymbol': None},
-    'conll2000_chunking':
-        {'columns': {0:'tokens', 2:'chunk_BIO'},
-         'label': 'chunk_BIO',
-         'evaluate': True,
+    'ampersand2':
+        {'columns': {1:'tokens', 4:'ds'},
+         'label': 'ds',
+         'evaluate': False,
          'commentSymbol': None},
 }
 
@@ -66,7 +71,8 @@ pickleFile = perpareDataset(embeddingsPath, datasets)
 embeddings, mappings, data = loadDatasetPickle(pickleFile)
 
 # Some network hyperparameters
-params = {'classifier': ['CRF'], 'LSTM-Size': [100], 'dropout': (0.25, 0.25)}
+params = {'classifier': ['CRF'], 'LSTM-Size': [100], 'dropout': (0.25, 0.25),
+         'customClassifier': {'ampersand2': ['Softmax']}}
 
 
 model = BiLSTM(params)
