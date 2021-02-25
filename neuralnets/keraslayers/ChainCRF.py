@@ -6,12 +6,12 @@ Author: Philipp Gross @ https://github.com/phipleg/keras/blob/crf/keras/layers/c
 
 from __future__ import absolute_import
 
-import tensorflow.keras as keras
-from tensorflow.keras import backend as K
-from tensorflow.keras import regularizers
-from tensorflow.keras import constraints
-from tensorflow.keras import initializers
-from tensorflow.python.keras.layers import Layer, InputSpec
+import keras
+from keras import backend as K
+from keras import regularizers
+from keras import constraints
+from keras import initializers
+from keras.engine import Layer, InputSpec
 
 def path_energy(y, x, U, b_start=None, b_end=None, mask=None):
     '''Calculates the energy of a tag path y for a given input x (with mask),
