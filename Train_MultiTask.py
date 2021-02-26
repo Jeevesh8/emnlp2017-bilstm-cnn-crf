@@ -40,7 +40,7 @@ datasets = {
     'ampersand':
         {'columns': {1:'tokens', 2:'full_BIO'},
          'label': 'full_BIO',
-         'evaluate': False,
+         'evaluate': True,
          'commentSymbol': None},
     'ampersand1':
         {'columns': {1:'tokens', 3:'bt_BIO'},
@@ -50,7 +50,7 @@ datasets = {
     'ampersand2':
         {'columns': {1:'tokens', 4:'ds'},
          'label': 'ds',
-         'evaluate': False,
+         'evaluate': True,
          'commentSymbol': None},
 }
 
