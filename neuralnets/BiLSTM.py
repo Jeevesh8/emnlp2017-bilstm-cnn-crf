@@ -37,9 +37,9 @@ class BiLSTM:
         # Hyperparameters for the network
         defaultParams = {'dropout': (0.5,0.5), 'classifier': ['Softmax'], 'LSTM-Size': (100,), 'customClassifier': {},
                          'optimizer': 'adam',
-                         'charEmbeddings': None, 'charEmbeddingsSize': 30, 'charFilterSize': 30, 'charFilterLength': 3, 'charLSTMSize': 25, 'maxCharLength': 25,
+                         'charEmbeddings': None, 'charEmbeddingsSize': 30, 'charFilterSize': 30, 'charFilterLength': 3, 'charLSTMSize': 512, 'maxCharLength': 512,
                          'useTaskIdentifier': False, 'clipvalue': 0, 'clipnorm': 1,
-                         'earlyStopping': 5, 'miniBatchSize': 32,
+                         'earlyStopping': 500, 'miniBatchSize': 8,
                          'featureNames': ['tokens', 'casing'], 'addFeatureDimensions': 10}
         if params != None:
             defaultParams.update(params)
