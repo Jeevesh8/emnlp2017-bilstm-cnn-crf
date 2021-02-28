@@ -616,7 +616,7 @@ class BiLSTM:
         model_dic = {}
         label_dic = {}
         
-        for modelpath in modelPaths:
+        for modelPath in modelPaths:
             model = keras.models.load_model(modelPath, custom_objects=create_custom_objects())
 
             with h5py.File(modelPath, 'r') as f:
@@ -626,7 +626,7 @@ class BiLSTM:
                 labelKey = f.attrs['labelKey']
             
             model_dic[modelName] = model
-            labal_dic[modelName] = labelKey
+            label_dic[modelName] = labelKey
 
         bilstm = BiLSTM(params)
         bilstm.setMappings(mappings, None)
