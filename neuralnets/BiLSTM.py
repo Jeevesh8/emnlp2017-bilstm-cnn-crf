@@ -608,23 +608,34 @@ class BiLSTM:
 
 
     @staticmethod
-    def loadModel(modelPath):
+    def loadModel(modelPaths):
         import h5py
         import json
         from .keraslayers.ChainCRF import create_custom_objects
+        
+        model_dic = {}
+        label_dic = {}
+        
+        for modelpath in modelPaths:
+            model = keras.models.load_model(modelPath, custom_objects=create_custom_objects())
 
-        model = keras.models.load_model(modelPath, custom_objects=create_custom_objects())
-
-        with h5py.File(modelPath, 'r') as f:
-            mappings = json.loads(f.attrs['mappings'])
-            params = json.loads(f.attrs['params'])
-            modelName = f.attrs['modelName']
-            labelKey = f.attrs['labelKey']
+            with h5py.File(modelPath, 'r') as f:
+                mappings = json.loads(f.attrs['mappings'])
+                params = json.loads(f.attrs['params'])
+                modelName = f.attrs['modelName']
+                labelKey = f.attrs['labelKey']
+            
+            model_dic[modelName] = model
+            labal_dic[modelName] = labelKey
 
         bilstm = BiLSTM(params)
         bilstm.setMappings(mappings, None)
-        bilstm.models = {modelName: model}
-        bilstm.labelKeys = {modelName: labelKey}
+        bilstm.models = model_dic
+        bilstm.labelKeys = label_dic
         bilstm.idx2Labels = {}
-        bilstm.idx2Labels[modelName] = {v: k for k, v in bilstm.mappings[labelKey].items()}
+        
+        for modelName in model_dic:
+            labelKey = label_dic[modelName]
+            bilstm.idx2Labels[modelName] = {v: k for k, v in bilstm.mappings[labelKey].items()}
+        
         return bilstm
