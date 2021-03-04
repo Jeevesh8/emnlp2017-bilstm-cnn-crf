@@ -608,7 +608,7 @@ class BiLSTM:
 
 
     @staticmethod
-    def loadModel(modelPaths):
+    def loadModel(modelPaths, params, embeddings, datasets, data, save_path):
         import h5py
         import json
         from .keraslayers.ChainCRF import create_custom_objects
@@ -618,7 +618,6 @@ class BiLSTM:
         
         for modelPath in modelPaths:
             model = keras.models.load_model(modelPath, custom_objects=create_custom_objects())
-
             with h5py.File(modelPath, 'r') as f:
                 mappings = json.loads(f.attrs['mappings'])
                 params = json.loads(f.attrs['params'])
@@ -629,13 +628,15 @@ class BiLSTM:
             label_dic[modelName] = labelKey
 
         bilstm = BiLSTM(params)
-        bilstm.setMappings(mappings, None)
-        bilstm.models = model_dic
-        bilstm.labelKeys = label_dic
-        bilstm.idx2Labels = {}
+        bilstm.setMappings(mappings, embeddings)
+        bilstm.setDataset(datasets, data)
+        bilstm.modelSavePath = save_path
         
-        for modelName in model_dic:
-            labelKey = label_dic[modelName]
-            bilstm.idx2Labels[modelName] = {v: k for k, v in bilstm.mappings[labelKey].items()}
+        bilstm.buildModel()
+        
+        for modelName in bilstm.models:
+            bilstm.models[modelName].set_weights(model_dic[modelName].get_weights())
+        
+        bilstm.labelKeys = label_dic 
         
         return bilstm
