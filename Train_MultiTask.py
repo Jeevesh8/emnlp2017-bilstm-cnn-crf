@@ -12,7 +12,7 @@ from neuralnets.BiLSTM import BiLSTM
 from util.preprocessing import perpareDataset, loadDatasetPickle
 
 from keras import backend as K
-
+import argparse
 
 # :: Change into the working dir of the script ::
 abspath = os.path.abspath(__file__)
@@ -74,12 +74,20 @@ embeddings, mappings, data = loadDatasetPickle(pickleFile)
 params = {'classifier': ['CRF'], 'LSTM-Size': [100], 'dropout': (0.25, 0.25),
          'customClassifier': {'ampersand2': ['Softmax']}}
 
+save_path = "models/[ModelName]_[DevScore]_[TestScore]_[Epoch].h5" 
 
-model = BiLSTM(params)
-model.setMappings(mappings, embeddings)
-model.setDataset(datasets, data)
-model.modelSavePath = "models/[ModelName]_[DevScore]_[TestScore]_[Epoch].h5"
-model.fit(epochs=500)
+if __name__=='__main__':
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--reload_wts', nargs='+', type=str, default=None, help='Paths of files to reload weights from.')
+    args = parser.parse_args()
+    
+    if args.reload_wts is None:
+        model.setMappings(mappings, embeddings)
+        model.setDataset(datasets, data)
+        model.modelSavePath = save_path
+    
+    else:
+        model = BiLSTM.loadModel(args.reload_wts, params, embeddings, datasets, data, save_path)
 
-
-
+    model.fit(epochs=500)
